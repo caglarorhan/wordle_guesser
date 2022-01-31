@@ -1,0 +1,29 @@
+{
+  "name": "wordle_guesser",
+  "short_name": "Wordle Guesser",
+  "description": "Guessing the word extension for Wordle",
+  "homepage_url": "https://www.caglarorhan.com",
+  "version": "2022.0.1",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "WORDLE GUESSER",
+    "default_icon": "./guess.png"
+  },
+  "icons": {
+    "16": "./guess.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://f.github.io/wordle-tr/"
+      ],
+      "js": [
+        "./js/content.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    "./js/content.js"
+  ]
+}
