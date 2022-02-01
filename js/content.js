@@ -1,4 +1,4 @@
-let trBuyukHarfler = [
+let trUpperCaseLetters = [
     "A",
     "B",
     "C",
@@ -28,7 +28,7 @@ let trBuyukHarfler = [
     "V",
     "Y",
     "Z"];
-let trKucukHarfler = [
+let trLowerCaseLetters = [
     "a",
     "b",
     "c",
@@ -59,19 +59,19 @@ let trKucukHarfler = [
     "y",
     "z"
 ];
-let trKucukHarfBesHarfliKelimeler = [
+let trFiveDigitLowerCaseWords = [
     "abacı",
     "abadi",
     "abalı",
     "Abana",
     "abani",
     "abaşo",
-    "Abaza",
-    "Abbas",
-    "Abdal",
+    "abaza",
+    "abbas",
+    "abdal",
     "abdal",
     "abece",
-    "Abhaz",
+    "abhaz",
     "abide",
     "abiye",
     "ablak",
@@ -98,7 +98,7 @@ let trKucukHarfBesHarfliKelimeler = [
     "adalı",
     "adama",
     "adamı",
-    "Adana",
+    "adana",
     "adedi",
     "adese",
     "adeta",
@@ -207,7 +207,6 @@ let trKucukHarfBesHarfliKelimeler = [
     "alkış",
     "alkil",
     "alkol",
-    "Allah",
     "allah",
     "allem",
     "allık",
@@ -215,7 +214,6 @@ let trKucukHarfBesHarfliKelimeler = [
     "almak",
     "Alman",
     "almaş",
-    "Almus",
     "alnaç",
     "altes",
     "altık",
@@ -5853,7 +5851,7 @@ let trKucukHarfBesHarfliKelimeler = [
     "zürra",
     "züyuf"
 ];
-let trBuyukHarfBesHarfliKelimeler = [
+let trFiveDigitUpperCaseWords = [
     "ABACI",
     "ABADI",
     "ABALI",
@@ -11647,25 +11645,20 @@ let trBuyukHarfBesHarfliKelimeler = [
     "ZÜRRA",
     "ZÜYUF"
 ];
+let letterPozitionMaps={};
 
-let harfPozisyonHaritasi={};
-
-
-trBuyukHarfBesHarfliKelimeler.forEach(kelime=>{
-    kelime.split('').forEach((harf,index)=>{
-        if(!trKucukHarfler.includes(harf) && !trBuyukHarfler.includes(harf)){console.log(harf, ' karakteri yakalandi, kelime',kelime)}
-        if(harfPozisyonHaritasi[harf]){
-            if(harfPozisyonHaritasi[harf][index]){
-                harfPozisyonHaritasi[harf][index]++
+trFiveDigitUpperCaseWords.forEach(word=>{
+    word.split('').forEach((letter,index)=>{
+        if(letterPozitionMaps[letter]){
+            if(letterPozitionMaps[letter][index]){
+                letterPozitionMaps[letter][index]++
             }else{
-                harfPozisyonHaritasi[harf][index]=1
+                letterPozitionMaps[letter][index]=1
             }
         }else{
-            harfPozisyonHaritasi[harf]={};
+            letterPozitionMaps[letter]={};
         }
     })
 })
 
-console.log(harfPozisyonHaritasi);
-
-
+console.log(letterPozitionMaps);
