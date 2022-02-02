@@ -8536,7 +8536,6 @@ let trFiveDigitUpperCaseWords = [
     "KARGO",
     "KARHA",
     "KARIK",
-    "KARIK",
     "KARIN",
     "KARIŞ",
     "KARLI",
@@ -11660,5 +11659,33 @@ trFiveDigitUpperCaseWords.forEach(word=>{
         }
     })
 })
+//
+Object.keys(letterPozitionMaps).forEach(harf=>{
+    for(let x=0;x<5;x++){
+        if(!letterPozitionMaps[harf][x]){
+            letterPozitionMaps[harf][x]=0;
+        }
+    }
+})
 
-console.log(letterPozitionMaps);
+// console.log(letterPozitionMaps);
+
+
+//TODO: her pozisyon icin en fazla kullanilan harf hangisi en cok kullanilandan en az kullanilana siralayalim harfleri
+//
+// for(let x=0; x<5; x++){
+//     let result = Object.keys(letterPozitionMaps).sort((a,b)=>{
+//         return letterPozitionMaps[b][x] - letterPozitionMaps[a][x]
+//     })
+//     console.log(`
+//     Pozisyon:${x} icin en cok yer alan harfler siralamasi:
+//      ${result}`)
+// }
+
+console.log(isLetterCombinationMatch())
+
+function isLetterCombinationMatch(letterCombination=["A","B", "A", "N", "A"]){
+    return trFiveDigitUpperCaseWords.some(word=>{
+        return (word.split('').sort().join('')===letterCombination.sort().join(''))
+    })
+}
