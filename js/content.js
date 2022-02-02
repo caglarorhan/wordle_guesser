@@ -11644,45 +11644,65 @@ let trFiveDigitUpperCaseWords = [
     "ZÜRRA",
     "ZÜYUF"
 ];
-let letterPozitionMaps={};
+let letterPositionMaps={};
 
 trFiveDigitUpperCaseWords.forEach(word=>{
     word.split('').forEach((letter,index)=>{
-        if(letterPozitionMaps[letter]){
-            if(letterPozitionMaps[letter][index]){
-                letterPozitionMaps[letter][index]++
+        if(letterPositionMaps[letter]){
+            if(letterPositionMaps[letter][index]){
+                letterPositionMaps[letter][index]++
             }else{
-                letterPozitionMaps[letter][index]=1
+                letterPositionMaps[letter][index]=1
             }
         }else{
-            letterPozitionMaps[letter]={};
+            letterPositionMaps[letter]={};
         }
     })
 })
+
+let wordListsByLetterPositions={};
+trFiveDigitUpperCaseWords.forEach(word=>{
+    word.split('').forEach((letter,index)=>{
+        if(wordListsByLetterPositions[letter]){
+            if(wordListsByLetterPositions[letter][index]){
+                wordListsByLetterPositions[letter][index].push(word);
+            }else{
+                wordListsByLetterPositions[letter][index]=[];
+            }
+        }else{
+            wordListsByLetterPositions[letter]={};
+        }
+    })
+})
+console.log(wordListsByLetterPositions)
 //
-Object.keys(letterPozitionMaps).forEach(harf=>{
+Object.keys(letterPositionMaps).forEach(harf=>{
     for(let x=0;x<5;x++){
-        if(!letterPozitionMaps[harf][x]){
-            letterPozitionMaps[harf][x]=0;
+        if(!letterPositionMaps[harf][x]){
+            letterPositionMaps[harf][x]=0;
         }
     }
 })
 
-// console.log(letterPozitionMaps);
-
-
 //TODO: her pozisyon icin en fazla kullanilan harf hangisi en cok kullanilandan en az kullanilana siralayalim harfleri
-//
-// for(let x=0; x<5; x++){
-//     let result = Object.keys(letterPozitionMaps).sort((a,b)=>{
-//         return letterPozitionMaps[b][x] - letterPozitionMaps[a][x]
-//     })
-//     console.log(`
-//     Pozisyon:${x} icin en cok yer alan harfler siralamasi:
-//      ${result}`)
-// }
 
-console.log(isLetterCombinationMatch())
+for(let x=0; x<5; x++){
+    let result = Object.keys(letterPositionMaps).sort((a,b)=>{
+        return letterPositionMaps[b][x] - letterPositionMaps[a][x]
+    })
+    console.log(`
+    Pozisyon:${x} icin en cok yer alan harfler siralamasi:
+     ${result}`)
+}
+
+//use * for joker letter
+function findWordByLetterPositions(letterPositions={0:"*",1:"*",2:"*",3:"*",4:"*"}){
+    let foundWords =[];
+    trFiveDigitUpperCaseWords.forEach(word=>{
+
+    })
+}
+
 
 function isLetterCombinationMatch(letterCombination=["A","B", "A", "N", "A"]){
     return trFiveDigitUpperCaseWords.some(word=>{
