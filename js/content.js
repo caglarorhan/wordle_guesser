@@ -11644,68 +11644,120 @@ let trFiveDigitUpperCaseWords = [
     "ZÜRRA",
     "ZÜYUF"
 ];
-let letterPositionMaps={};
 
-trFiveDigitUpperCaseWords.forEach(word=>{
-    word.split('').forEach((letter,index)=>{
-        if(letterPositionMaps[letter]){
-            if(letterPositionMaps[letter][index]){
-                letterPositionMaps[letter][index]++
-            }else{
-                letterPositionMaps[letter][index]=1
+function createLetterPositionMap(wordList){
+    let letterPositionMap={};
+    wordList.forEach(word=>{
+        word.split('').forEach((letter,index)=>{
+            if(!letterPositionMap[letter]){
+                letterPositionMap[letter]={};
             }
-        }else{
-            letterPositionMaps[letter]={};
+                if(letterPositionMap[letter][index]){
+                    letterPositionMap[letter][index]++
+                }else{
+                    letterPositionMap[letter][index]=1
+                }
+        })
+    })
+    Object.keys(letterPositionMap).forEach(letter=>{
+        for(let x=0;x<5;x++){
+            if(!letterPositionMap[letter][x]){
+                letterPositionMap[letter][x]=0;
+            }
         }
     })
-})
+    return letterPositionMap;
+}
 
-let wordListsByLetterPositions={};
-trFiveDigitUpperCaseWords.forEach(word=>{
-    word.split('').forEach((letter,index)=>{
-        if(wordListsByLetterPositions[letter]){
-            if(wordListsByLetterPositions[letter][index]){
-                wordListsByLetterPositions[letter][index].push(word);
-            }else{
-                wordListsByLetterPositions[letter][index]=[];
-            }
-        }else{
-            wordListsByLetterPositions[letter]={};
-        }
+function createWordsMapByLetterPositionsValues(wordList){
+    let wordsMap =[]
+    let letterPositionMap = createLetterPositionMap(trFiveDigitUpperCaseWords)
+    wordList.forEach(word=>{
+        let wordLettersPositionsTotalValue=0;
+        word.split('').forEach((letter,index)=>{
+            wordLettersPositionsTotalValue+=letterPositionMap[letter][index]
+        })
+        wordsMap.push({word:word, value:wordLettersPositionsTotalValue});
     })
-})
-console.log(wordListsByLetterPositions)
-//
-Object.keys(letterPositionMaps).forEach(harf=>{
-    for(let x=0;x<5;x++){
-        if(!letterPositionMaps[harf][x]){
-            letterPositionMaps[harf][x]=0;
-        }
+    return wordsMap.sort((a,b)=>{return b.value-a.value});
+}
+
+function createWordListByLetterPositions(wordList){
+    let wordListsByLetterPositions={};
+    let wordSize = wordList[0].length;
+    if(!wordList.every(word=>word.length===wordSize)){
+        throw new Error('Words of this list has different word lengths.');
     }
-})
-
-//TODO: her pozisyon icin en fazla kullanilan harf hangisi en cok kullanilandan en az kullanilana siralayalim harfleri
-
-for(let x=0; x<5; x++){
-    let result = Object.keys(letterPositionMaps).sort((a,b)=>{
-        return letterPositionMaps[b][x] - letterPositionMaps[a][x]
+    wordList.forEach(word=>{
+        let lettersOfWord = word.split('');
+        for(let x=0; x<wordSize; x++){
+            if(!wordListsByLetterPositions[x]){
+                wordListsByLetterPositions[x]={}
+            }
+            if(!wordListsByLetterPositions[x][lettersOfWord[x]]){
+                wordListsByLetterPositions[x][lettersOfWord[x]]=[]
+            }
+            wordListsByLetterPositions[x][lettersOfWord[x]].push(word);
+        }
     })
-    console.log(`
-    Pozisyon:${x} icin en cok yer alan harfler siralamasi:
-     ${result}`)
+    return wordListsByLetterPositions
 }
 
-//use * for joker letter
-function findWordByLetterPositions(letterPositions={0:"*",1:"*",2:"*",3:"*",4:"*"}){
-    let foundWords =[];
-    trFiveDigitUpperCaseWords.forEach(word=>{
-
-    })
+function mostUsedLettersPerPosition(wordList){
+    let letterPositionMaps = createLetterPositionMap(wordList);
+    let listOfMostPositionedLetters='';
+    for(let x=0; x<5; x++){
+        let result = Object.keys(letterPositionMaps).sort((a,b)=>letterPositionMaps[b][x] - letterPositionMaps[a][x]
+        )
+        listOfMostPositionedLetters+= `
+                Pozisyon:${x} icin en cok yer alan harfler siralamasi:
+                ${result}`;
+    }
+    return listOfMostPositionedLetters;
 }
 
-
-function isLetterCombinationMatch(letterCombination=["A","B", "A", "N", "A"]){
-    return trFiveDigitUpperCaseWords.some(word=>{
-        return (word.split('').sort().join('')===letterCombination.sort().join(''))
-    })
+function stepByStepFilter(query,wordList){
+let newWordList;
+    switch (query.status){
+        case 'fixedPositioned':
+            newWordList = wordList.filter(word=>word.indexOf(query.letter)===query.position);
+            break
+        case 'notPositioned':
+            if(query.isMultiple){
+                newWordList = wordList.filter(word=>(word.split('')[query.position]!==query.letter && word.split('').filter(letter=>letter===query.letter).length>1));
+            }else{
+                newWordList = wordList.filter(word=>word.split('')[query.position]!==query.letter && word.split('').filter(letter=>letter===query.letter).length===1);
+            }
+            break
+        case 'notExist':
+            newWordList = wordList.filter(word=>word.indexOf(query.letter)===-1);
+            break
+    }
+    return newWordList;
 }
+
+function queryFilterStepper(queries, wordList){
+    queries.forEach(query=>{
+        wordList = stepByStepFilter(query,wordList);
+    })
+    return wordList;
+}
+// let queries = [
+//     {status:'fixedPositioned',position:1,letter:'A'},
+//     {status:'notExist',letter:'K'},
+//     {status:'notExist',letter:'N'},
+//     {status:'notExist',letter:'I'},
+//     {status:'notExist',letter:'S'},
+//     {status:'notExist',letter:'R'},
+//     {status:'notExist',letter:'B'},
+//     {status:'notExist',letter:'L'},
+//     {status:'notPositioned',position: 4,letter:'T'},
+//     {status:'notPositioned',position: 3,letter:'A', isMultiple:true},
+//     {status:'notPositioned',position: 3,letter:'T'},
+//     {status:'notPositioned',position: 0,letter:'Y'},
+//     {status:'notExist',letter:'M'},
+//     {status:'notExist',letter:'G'}
+// ]
+
+let newWordList = queryFilterStepper(queries,trFiveDigitUpperCaseWords);
+console.log(createWordsMapByLetterPositionsValues(newWordList));
