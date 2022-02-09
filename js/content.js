@@ -5718,22 +5718,22 @@ const WG ={
         }
     },
     processNewWord: async function (newWord, wordList=this.upperCaseWords){
-
         if(this.isStopConditionExist()){return;}
-        wordList = wordList.filter(word=>{return word!==newWord});
-        await this.insertNewWordToBoard(newWord);
-        let filteredWordList = await this.queryFilterStepper(this.queryBuilder(), wordList);
-        let newWordListByValuePoints = await this.createWordsMapByLetterPositionsValues(filteredWordList);
-        if(filteredWordList.length === 0){
-            console.log('No words left to insert');
-            return;
-        }
-        console.log(`New word is: ${newWord} and next word is: ${newWordListByValuePoints[0].word}`);
-        console.log(`Filtered Word List: ${filteredWordList}`);
-        if(filteredWordList.length === 1){
-            await this.insertNewWordToBoard(filteredWordList[0]);
-        }
-        await this.processNewWord(newWordListByValuePoints[0].word, filteredWordList);
+        let instertion = await this.insertNewWordToBoard(newWord);
+        console.log(instertion);
+        this.sendMessageToPopup({type:'messageFromContent', payload: {message:instertion}});
+            wordList = wordList.filter(word=>{return word!==newWord});
+            if(wordList.length === 0){
+                console.log('There is no more words to process');
+                return;
+            }
+            let filteredWordList =  this.queryFilterStepper(this.queryBuilder(), wordList);
+            let newWordListByValuePoints =  await this.createWordsMapByLetterPositionsValues(filteredWordList);
+                let nextWord = newWordListByValuePoints[0].word;
+                await this.processNewWord(nextWord, filteredWordList);
+
+
+
 
     },
     stepByStepFilter:function (query,wordList){
@@ -5775,23 +5775,21 @@ const WG ={
             console.log(messageObject.payload.message);
         }
     },
-    insertNewWordToBoard: async function (newWord){
-return new Promise((resolve,reject)=>{
-    let gameApp = document.querySelector('game-app');
-    newWord.split('').forEach(async (letter)=>{
-        let lowerCaseLetter = WG.lowerCaseLetters[WG.upperCaseLetters.indexOf(letter)];
-        await this.clickToTheKeyBoard(lowerCaseLetter);
-    })
-    this.clickToTheKeyBoard("↵");
-    setTimeout(()=>{
-        resolve();
-    },1000);
-
-})
+    insertNewWordToBoard:  function (newWord){
+        return new Promise((resolve,reject)=>{
+            newWord.split('').forEach( (letter)=>{
+                let lowerCaseLetter = WG.lowerCaseLetters[WG.upperCaseLetters.indexOf(letter)];
+                this.clickToTheKeyBoard(lowerCaseLetter);
+            })
+            this.clickToTheKeyBoard("↵");
+            window.setTimeout(()=>{
+                resolve(`"${newWord}" word is inserted successfully!`);
+            },3000)
+        });
     },
-    clickToTheKeyBoard: async function (key){
+    clickToTheKeyBoard:  function (key){
         let gameApp = document.querySelector('game-app');
-        await gameApp.shadowRoot.querySelector('game-keyboard').shadowRoot.querySelector("button[data-key='"+key+"']").click()
+        gameApp.shadowRoot.querySelector('game-keyboard').shadowRoot.querySelector("button[data-key='"+key+"']").click()
     },
 
 }

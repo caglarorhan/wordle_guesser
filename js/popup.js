@@ -5638,7 +5638,7 @@ window.addEventListener('load',()=>{
 chrome.runtime.onMessage.addListener(  async (request)=>{
     switch(request.type){
         case 'messageFromContent':
-            alert(request.payload.message);
+            WG.noteIt(request.payload.message);
             break;
     }
 })
