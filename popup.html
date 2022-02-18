@@ -5,12 +5,27 @@
     <title>WORDLE GUESSER</title>
 </head>
 <body style="width: 400px; height: 200px; padding:0px; margin: 0px; position: relative">
-    <h2 style="text-align: center; font-weight: bold; color: chocolate; background-color: bisque; width:100%; display: block; margin: 0; height:30px">Hello Wordle (Guesser)!</h2>
-    <div style="font-weight: bold">BEGIN WITH THE WORD: <input id="guessedWord" type="text"></div>
-    <div>Automatic Guess On:<input type="checkbox" id="isAutomaticGuessOn"></div>
-    <button id="startGuessButton">START TO GUESS</button>
-<div id="notes-item">...</div>
-<span style="margin: auto 0px 0px; bottom:0px; position: absolute"><a href="https://www.flaticon.com/free-icons/question" title="question icons">Question icons created by Freepik - Flaticon</a></span>
+    <h2 style="text-align: center; font-weight: bold; color: chocolate; background-color: bisque; width:100%; display: block; margin: 0 0 4px 0; height:30px">Hello Wordle (Guesser)!</h2>
+    <div style="font-weight: bold">BEGIN WITH THE WORD:
+        <input
+                id="guessedWord"
+                type="text"
+                style="font-size: 18px; text-align: center; color:red; text-transform:uppercase; font-weight: bold; border: 1px solid orangered; letter-spacing: 1px"
+                size="5"
+                maxlength="5">
+        <span style=""><input type="checkbox" id="isAutomaticGuessOn"> Auto-guess</span>
+    </div>
+    <h2 style="text-align: center; font-weight: bold; color: chocolate; background-color: bisque; width:100%; display: block; margin: 6px 0 4px 0; height:30px">Choose The Guessing Type</h2>
+    <div style="display: flex; flex-direction: column;">
+        <span><input type="radio" name="guessType" class="methodOption" value="LFS" checked="checked"> Letter Frequency Sum (LFS)</span>
+        <span><input type="radio" name="guessType" class="methodOption" value="LFS_LU"> LFS & Letter Uniqueness (LU)</span>
+    </div>
+
+<div>
+    <span id="notes-item">...</span>
+    <span style="margin: auto 0px 0px; bottom:0px; position: absolute"><a href="https://www.flaticon.com/free-icons/question" title="question icons">Freepik</a></span>
+    <button id="startGuessButton" style="position: absolute; right:0; bottom:0; font-weight: bold; color: chocolate; background-color: bisque;">START TO GUESS</button>
+</div>
 
 <script src="js/popup.js"></script>
 </body>

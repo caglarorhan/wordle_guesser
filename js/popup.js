@@ -5594,6 +5594,24 @@ const WG ={
             });
         });
     },
+    isAutoGuessOn: function(){
+        return document.getElementById('isAutomaticGuessOn').checked;
+    },
+    disjoint:(firstWord, wordObjectList)=>{
+        //returns new word list which has words that has any letter that firstWord has.
+        return wordObjectList.filter(wordObject => {
+            return firstWord.split('').every(letter => {
+                return !wordObject.word.includes(letter)
+            })
+        })
+    },
+    wordsWithUniqueLetters:(wordObjectsList)=>{
+        return wordObjectsList.filter(wordObject=>{
+
+            let wordsLettersSet = new Set(wordObject.word.split(''));
+            return wordObject.word.length===[...wordsLettersSet].length;
+        })
+    },
     sendNewWord:function (word=''){
         WG.sendMessageToContent({type:'plainMessageFromPopup',payload:{message:`New word sent: ${word}`}})
         this.noteIt('New word is being sent to content: '+word);
@@ -5603,14 +5621,15 @@ const WG ={
     automaticGuessCheckToggle: function (){
         WG.handleAutoGuessCheck();
     },
-    isAutoGuessOn: function(){
-        return document.getElementById('isAutomaticGuessOn').checked;
-    },
     handleAutoGuessCheck: function(){
     let guessedWord = document.getElementById('guessedWord');
         if(WG.isAutoGuessOn()){
             let firstWordGuessByValuePoints = WG.createWordsMapByLetterPositionsValues(WG.upperCaseWords)[0];
-            guessedWord.value = firstWordGuessByValuePoints.word;
+            let methodOption = document.querySelectorAll('.methodOptions:checked').value;
+            alert(methodOption)
+            // guessedWord.value = firstWordGuessByValuePoints.word; // this was the first approach
+             guessedWord.value = WG.wordsWithUniqueLetters(WG.createWordsMapByLetterPositionsValues(WG.upperCaseWords))[0].word;
+            this.sendMessageToContent({type:'plainMessageFromPopup',payload:{message:WG.wordsWithUniqueLetters(WG.createWordsMapByLetterPositionsValues(WG.upperCaseWords))[0].word}}); // this is the second approach
         }else{
             guessedWord.value = '';
         }

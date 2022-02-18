@@ -5706,6 +5706,14 @@ const WG ={
     },
     wordsOnBoard:function (){ return this.getBoardState().wordList.filter(word=>word !== '');
     },
+    disjoint:(firstWord, wordList)=>{
+        //returns new word list which has words that has any letter that firstWord has.
+        return wordList.filter(wordObject => {
+            return firstWord.split('').every(letter => {
+                return !wordObject.word.includes(letter)
+            })
+        })
+    },
     isStopConditionExist:function(){
         if(this.wordsOnBoard.length === this.boardHeight){
             console.log('Board full');
@@ -5719,9 +5727,9 @@ const WG ={
     },
     processNewWord: async function (newWord, wordList=this.upperCaseWords){
         if(this.isStopConditionExist()){return;}
-        let instertion = await this.insertNewWordToBoard(newWord);
-        console.log(instertion);
-        this.sendMessageToPopup({type:'messageFromContent', payload: {message:instertion}});
+        let insertion = await this.insertNewWordToBoard(newWord);
+        console.log(insertion);
+        this.sendMessageToPopup({type:'messageFromContent', payload: {message:insertion}});
             wordList = wordList.filter(word=>{return word!==newWord});
             if(wordList.length === 0){
                 console.log('There is no more words to process');
@@ -5729,6 +5737,7 @@ const WG ={
             }
             let filteredWordList =  this.queryFilterStepper(this.queryBuilder(), wordList);
             let newWordListByValuePoints =  await this.createWordsMapByLetterPositionsValues(filteredWordList);
+
                 let nextWord = newWordListByValuePoints[0].word;
                 await this.processNewWord(nextWord, filteredWordList);
 
