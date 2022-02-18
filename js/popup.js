@@ -5626,7 +5626,7 @@ const WG ={
         if(WG.isAutoGuessOn()){
             let firstWordGuessByValuePoints = WG.createWordsMapByLetterPositionsValues(WG.upperCaseWords)[0];
             let methodOption = document.querySelectorAll('.methodOptions:checked').value;
-            alert(methodOption)
+            //alert(methodOption)
             // guessedWord.value = firstWordGuessByValuePoints.word; // this was the first approach
              guessedWord.value = WG.wordsWithUniqueLetters(WG.createWordsMapByLetterPositionsValues(WG.upperCaseWords))[0].word;
             this.sendMessageToContent({type:'plainMessageFromPopup',payload:{message:WG.wordsWithUniqueLetters(WG.createWordsMapByLetterPositionsValues(WG.upperCaseWords))[0].word}}); // this is the second approach
