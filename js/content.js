@@ -3,11 +3,15 @@ window.addEventListener('load',()=>{
     chrome.runtime.onMessage.addListener(  async (request)=>{
         switch(request.type){
             case 'newWord':
-                console.log(`New word arrived: ${request.payload.word}`);
+                console.log(`POPUP: New word arrived: ${request.payload.word}`);
                 await WG.processNewWord(request.payload.word);
                 break;
             case 'plainMessageFromPopup':
-                console.log(`POPUP:${request.payload.message}`);
+                console.log(`POPUP: ${request.payload.message}`);
+                break;
+            case "resetData":
+                console.log('POPUP: '+request.payload.message)
+                WG.resetData();
                 break;
             default:
                 break;
@@ -5800,7 +5804,12 @@ const WG ={
         let gameApp = document.querySelector('game-app');
         gameApp.shadowRoot.querySelector('game-keyboard').shadowRoot.querySelector("button[data-key='"+key+"']").click()
     },
-
+    resetData: ()=>{
+    localStorage.clear();
+    // TODO: Debug that
+    WG.sendMessageToPopup({type:'messageFromContent', payload: {message:"Local Storage data is cleared!"}})
+}
+// TODO: Last word success control is failing...
 }
 
 

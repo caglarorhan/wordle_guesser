@@ -1,17 +1,18 @@
 {
   "name": "wordle_guesser",
-  "short_name": "Wordle Guesser",
-  "description": "Guessing the word extension for Wordle",
-  "homepage_url": "https://www.caglarorhan.com",
-  "version": "2022.0.2",
-  "manifest_version": 3,
+  "short_name": "Wordle Turkish Guesser",
+  "description": "Guessing the word extension for Wordle Turkish",
+  "homepage_url": "https://www.linkedin.com/in/caglarorhan/",
+  "version": "2022.0.3",
+  "manifest_version": 2,
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "WORDLE GUESSER",
-    "default_icon": "./guess.png"
+    "default_title": "WORDLE TURKISH GUESSER",
+    "default_icon": "./guesser_16.png"
   },
   "icons": {
-    "16": "./guess.png"
+    "16": "./guesser_16.png",
+    "128": "./guesser_128.png"
   },
   "content_scripts": [
     {
@@ -25,5 +26,6 @@
   ],
   "web_accessible_resources": [
     "./js/content.js"
-  ]
+  ],
+  "permissions": ["activeTab", "storage"]
 }

@@ -5624,12 +5624,22 @@ const WG ={
     handleAutoGuessCheck: function(){
     let guessedWord = document.getElementById('guessedWord');
         if(WG.isAutoGuessOn()){
-            let firstWordGuessByValuePoints = WG.createWordsMapByLetterPositionsValues(WG.upperCaseWords)[0];
-            let methodOption = document.querySelectorAll('.methodOptions:checked').value;
-            //alert(methodOption)
-            // guessedWord.value = firstWordGuessByValuePoints.word; // this was the first approach
-             guessedWord.value = WG.wordsWithUniqueLetters(WG.createWordsMapByLetterPositionsValues(WG.upperCaseWords))[0].word;
-            this.sendMessageToContent({type:'plainMessageFromPopup',payload:{message:WG.wordsWithUniqueLetters(WG.createWordsMapByLetterPositionsValues(WG.upperCaseWords))[0].word}}); // this is the second approach
+            let wordsMapByLetterPositionsValues = WG.createWordsMapByLetterPositionsValues(WG.upperCaseWords);
+            let methodOption = document.querySelector('.methodOption:checked');
+            let selectedGuessedWord = '';
+            switch(methodOption.value){
+                case "LFS":
+                    selectedGuessedWord = wordsMapByLetterPositionsValues[0].word;
+                    break;
+                case "LFS_LU":
+                    selectedGuessedWord = WG.wordsWithUniqueLetters(wordsMapByLetterPositionsValues)[0].word;
+                    break;
+                default:
+                    break;
+            }
+            guessedWord.value = selectedGuessedWord;
+            let payloadObject ={message:selectedGuessedWord};
+            this.sendMessageToContent({type:'plainMessageFromPopup',payload:payloadObject});
         }else{
             guessedWord.value = '';
         }
@@ -5652,6 +5662,13 @@ window.addEventListener('load',()=>{
 
     document.querySelector('#startGuessButton').addEventListener('click',WG.beginToGuess)
     document.querySelector('#isAutomaticGuessOn').addEventListener('click',WG.automaticGuessCheckToggle)
+    document.querySelector('#localHostResetButton').addEventListener('click',()=>{
+        let dataResetConfirmed = confirm('Do you wanna reset all Wordle Turkish game data?');
+        if(!dataResetConfirmed) return;
+        WG.sendMessageToContent({type:'resetData',payload:{message:'Request of reset localStorage data.'}});
+        WG.noteIt("Data reset request sent!")
+    })
+    document.querySelectorAll('.methodOption').forEach(methodOption=>methodOption.addEventListener('click',WG.automaticGuessCheckToggle))
 })
 
 chrome.runtime.onMessage.addListener(  async (request)=>{
