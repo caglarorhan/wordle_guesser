@@ -3,7 +3,7 @@
   "short_name": "Wordle Turkish Guesser",
   "description": "Guessing the word extension for Wordle Turkish",
   "homepage_url": "https://www.linkedin.com/in/caglarorhan/",
-  "version": "2022.0.3",
+  "version": "2022.0.4",
   "manifest_version": 2,
   "browser_action": {
     "default_popup": "popup.html",
@@ -26,6 +26,7 @@
   ],
   "web_accessible_resources": [
     "./js/content.js"
+
   ],
   "permissions": ["activeTab", "storage"]
 }

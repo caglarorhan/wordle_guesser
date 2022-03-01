@@ -2,31 +2,148 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>WORDLE GUESSER</title>
+    <title>WORDLE TURKISH GUESSER</title>
+    <style>
+        h2{
+            background-color: #6AAA64;
+            color:white;
+        }
+        button{
+            cursor:pointer;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            padding:0;
+        }
+        h1 {
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        #statistics {
+            display: flex;
+            margin-bottom:1px;
+            justify-content: space-between;
+        }
+
+        .statistic-container {
+            flex: 1;
+        }
+
+        .statistic-container .statistic {
+            font-size: 16px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            letter-spacing: 0.05em;
+            font-variant-numeric: proportional-nums;
+        }
+
+
+        .statistic-container .label {
+            font-size: 8px;
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #guess-distribution {
+            width: 80%;
+        }
+
+        .graph-container {
+            width: 100%;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            padding-bottom: 4px;
+            font-size: 14px;
+            line-height: 20px;
+        }
+
+        .graph-container .graph {
+            width: 100%;
+            height: 100%;
+            padding-left: 4px;
+        }
+
+        .graph-container .graph .graph-bar {
+            height: 100%;
+            /* Assume no wins */
+            width: 0%;
+            position: relative;
+            background-color: grey;
+            display: flex;
+            justify-content: center;
+        }
+
+        .graph-container .graph .graph-bar.align-right {
+            justify-content: flex-end;
+            padding-right: 8px;
+        }
+
+        .graph-container .graph .num-guesses {
+            font-weight: bold;
+            color: white;
+            width:inherit;
+            min-width: auto;
+        }
+        .graph-container .guess{
+            width:20px;
+            text-align: right;
+        }
+
+        #statistics,
+        #guess-distribution {
+            padding-bottom: 10px;
+        }
+    </style>
 </head>
-<body style="width: 400px; height: 200px; padding:0px; margin: 0px; position: relative">
-    <h2 style="text-align: center; font-weight: bold; color: chocolate; background-color: bisque; width:100%; display: block; margin: 0 0 4px 0; height:30px">Hello Wordle (Guesser)!</h2>
+<body style="width: 400px; height: 560px; padding:0px; margin: 0px; position: relative">
+    <h2 style="text-align: center; font-weight: bold;  width:100%; display: block; margin: 0 0 4px 0; height:30px">Hello Wordle (Guesser)!</h2>
     <div style="font-weight: bold">BEGIN WITH THE WORD:
         <input
                 id="guessedWord"
                 type="text"
-                style="font-size: 18px; text-align: center; color:red; text-transform:uppercase; font-weight: bold; border: 1px solid orangered; letter-spacing: 1px"
+                style="font-size: 18px; text-align: center; color:red; font-weight: bold; border: 1px solid orangered; letter-spacing: 1px"
                 size="5"
                 maxlength="5">
-        <span style=""><input type="checkbox" id="isAutomaticGuessOn"> Auto-guess</span>
     </div>
-    <h2 style="text-align: center; font-weight: bold; color: chocolate; background-color: bisque; width:100%; display: block; margin: 6px 0 4px 0; height:30px">Choose The Guessing Type</h2>
+    <h2 style="text-align: center; font-weight: bold; width:100%; display: block; margin: 6px 0 4px 0; height:30px">Choose The Guessing Method</h2>
     <div style="display: flex; flex-direction: column;">
+        <span style=""><input type="checkbox" id="isAutomaticGuessOn"> Auto-guess (starts guessing immediately)</span>
         <span><input type="radio" name="guessType" class="methodOption" value="LFS" checked="checked"> Letter Frequency Sum (LFS)</span>
         <span><input type="radio" name="guessType" class="methodOption" value="LFS_LU"> LFS & Letter Uniqueness (LU)</span>
+        <span>  <input type="radio" name="guessType" class="methodOption" value="CLU"> Consecutive Letter Uniqueness (CLU)
+                <input type="number" value="1" size="1" style="width:35px" id="effectedGuessCount"> (words to be guessed)
+        </span>
     </div>
-    <div id="notes-item" style="width: 100%; height: 37px; border:2px solid darkorange; background-color: lightgoldenrodyellow; ">...</div>
+    <div id="statistics-item" style="width: 100%; height: 280px; border:0px; border-bottom:2px solid darkorange;border-top:2px solid darkorange;">
+    <div id="notes-item" style="width: 100%; height: 30px; border:0px; border-top:2px solid darkorange; background-color: lightgoldenrodyellow; ">...</div>
+        <div class="container">
+            <h1 id="statisticsHeader" style="margin-top: 0px;"></h1>
+            <div id="statistics">
+            </div>
+            <div id="guess-distribution">
+            </div>
+        </div>
+    </div>
+    <div><input type="checkbox" id="gameModalAutoClose_switch">: Close Game-Modal</div>
 <div style="width:100%; display: flex; bottom: 0px; position: absolute;  flex-direction:row; justify-content: space-between">
-    <button id="" data-link="https://www.flaticon.com/free-icons/question" title="https://www.flaticon.com/free-icons/question">Icon Copyright</button>
-    <button id="localHostResetButton">Reset All Data</button>
-    <button id="startGuessButton" style="font-weight: bold; color: chocolate; background-color: bisque;">START TO GUESS</button>
+    <button class="outLink" data-link="https://www.flaticon.com/free-icons/question" title="Click to go to https://www.flaticon.com/free-icons/question" id="iconCopyrightButton">Icon Copyright</button>
+    <button class="outLink" data-link="https://www.bundle.app/wordle-tr/" title="Click to go to https://www.bundle.app/wordle-tr/" id="wordleTurkishButton">Wordle Turkish</button>
+    <button class="outLink" data-link="https://github.com/caglarorhan" title="Click to go to https://github.com/caglarorhan" id="myGitHubProfile">My GitHub Profile</button>
+    <button id="localStorageResetButton" title="Click to reset all played game data"></button>
 </div>
-
-<script src="js/popup.js"></script>
+<script src="./js/popup.js" ></script>
 </body>
 </html>
