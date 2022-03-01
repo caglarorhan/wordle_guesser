@@ -1,26 +1,27 @@
-`**What is Wordle Guesser?**
+**What is Wordle Guesser?**
 
 It is a browser attachment (extension) that trying to solve wordle game's Turkish version by guessing the word.
 Wordle Game Turkish version is authored by [Fatih Kadir Akın](https://github.com/f)  and it is available on [Bundle.app](https://www.bundle.app/wordle-tr/ )
 
 **How it works?**
 
-The Chrome Extension is written with javascript. The main working logic is to guess the hidden word with the given information from the game's board. While doing this it tries to use different approaches to narrowing the word list with information collected from the game's board. Although the game keeps all its data and solutions on the localStorage we try to solve the game as a real person by clicking the screen keyboard given.
+The Chrome Extension is written with javascript. The main working logic is to guess the hidden word with the help of the given information from the game's board. While doing this it tries to use different approaches to narrowing the word list with information collected from the game's board. Although the game keeps all its data and solutions on the localStorage we tried to solve the game as a real person by clicking the screen keyboard given.
 
 
-**How to Use**
+**How to Use?**
 
-You need to install(load) the extension by downloading all files to your local machine. After that, you should open developer mode on a browser and load the extension files.
+You need to install (load) the extension by downloading all files to your local machine. After that, you should open developer mode (chrome://extensions/) on a browser (right top corner) and load the extension files (Load unpacked button -on top left corner).
 
-After installing direct your browser tab to the https://www.bundle.app/wordle-tr/ page. And start that day's game. Open extension by clicking on the extension icon in the top right corner of the browser.
+After installing start that day's game by clicking the extensions icon. Open extension by clicking on the extension icon in the top right corner of the browser. You should pin it from extensions menu on top right corner (extensions icon is a puzzle piece shape)
 
 Choose a beginning word by writing it on to extension's input field and press ENTER, repeat.
-Or you can let the extension pick a popular Turkish word for you. Choose a guess method and click the checkbox (Auto-guess (starts guessing immediately)).
+Or you can let the extension picks a popular Turkish word for you. Choose a guess method and click the checkbox (Auto-guess (starts guessing immediately)).
 
 After a couple of days, the extension would be on extension markets.
 
 **Guessing Methods**
-There are 3 methods we used to make a "narrowed word list" to pick our guess from them. Firstly we create a position-letter frequency calculation to get the most used letters positioned in their proper places on such words. To do so, and taking sum of the frequencies we are accumulating points for every word. If we reorder the words according to these numbers every letter in every word has the most used position than the bottom side words letters positions in general. 
+
+There are 3 methods we used to make a "narrowed word list" to pick our guess from. Firstly, we create a position-letter frequency calculation to get the most used letters positioned in their proper places on such words. To do so, and taking sum of the frequencies, we are accumulating points for every word. If we reorder the words according to these numbers from bigger to smaller, every letter in every word has the most used position than the bottom side words letters positions in general. 
 
 **Methods**
 - Letter Frequency Sum (LFS)
@@ -29,13 +30,16 @@ There are 3 methods we used to make a "narrowed word list" to pick our guess fro
 
 **Detail Notes** 
 
-Every time to guess a new word, all older guessed word are extracted from the list first. Obtained new word list reorder by their letter-position sum number.
-After every guess clues (letter-position and existence information) are collected from board. These clues are like "absent", "correct", "present" and given for every letter on the word.
+Every time to guess a new word, all older guessed words are excluded from the list. Obtained new word list reordered by their letter-position sum number in place.
+After every guess clues (letter-position and existence information) are collected from the game board. These clues are like "absent", "correct", "present" and given for every letter on the word.
  - absent means this letter is not in the current guessed word
  - correct means this letter is presence and positioning correct
  - present means this letter is presence but positioning is incorrect
 
-**Letter Frequency Sum (LFS)**
+
+
+
+ **Letter Frequency Sum (LFS)**
 
 This method uses the list we mention above. Every guess narrows the word list. 
 
@@ -52,10 +56,9 @@ This method has a special guessing limit because of the Turkish language letter 
 
 coming soon...
 
+- Functions in detail
+- Business logic in detail
+- DOM search in detail
+- Messaging structure between popup and content side
 
 
-
-
-
-
-`
