@@ -5648,8 +5648,6 @@ const WG ={
     return queries;
 },
     stepByStepFilter:function (query,wordList){
-    //alert(`Query: ${JSON.stringify(query)}`);
-    //alert(`setepbystepe gelen word sayisi: ${wordList.length}`)
     switch (query.status){
         case 'correct':
             wordList = wordList.filter(word=>word.charAt(query.position)===query.letter);
@@ -5672,7 +5670,6 @@ const WG ={
         default:
             WG.noteIt({message:'Unknown status of query'})
     }
-    //console.log(`Stepbystep ten cikan word sayisi: ${wordList.length}`);
     return wordList;
 },
     queryFilterStepper:function (queries, wordList){
@@ -5686,6 +5683,7 @@ const WG ={
         let wordList = WG.lowerCaseLetterWordList;
         if(boardStatus.wordList.length===WG.boardHeight){
             WG.noteIt({message:"Board is full, game finished!"});
+            WG.giveStatistics();
             return
         }
         wordList = wordList.filter(word=>!boardStatus.wordList.includes(word)); // excludes board's words from main list
@@ -5694,9 +5692,7 @@ const WG ={
     },
     handleAutoGuessCheck: function(wordListG, queries){
         let wordList = !wordListG.length?WG.lowerCaseLetterWordList:wordListG;
-        //alert(`handleAutoGuessCheck e gelen word sayisi: ${wordList.length}`)
         let guessedWord = document.getElementById('guessedWord');
-
         let methodOption = document.querySelector('.methodOption:checked');
         let selectedGuessedWord = '';
         if(WG.isAutoGuessOn()){
@@ -5725,8 +5721,6 @@ const WG ={
                     }else{
                         selectedGuessedWord = WG.consecutiveWordsThatHasNonRepeatingLetters(WG.lowerCaseLetterWordList)[0].word;
                     }
-
-
                     break;
                 default:
                     break;
@@ -5809,24 +5803,23 @@ const WG ={
         WG.sendMessageToContent({type:"giveStatistics"})
     },
     getStatistics:(payload)=>{
-
         document.getElementById("statisticsHeader").innerHTML=WG.setLabel().statistics;
         let {guesses, ...statisticsData}= JSON.parse(payload.statistics);
         let mainContainer = document.querySelector('#statistics-item .container');
         let statisticsContainer = mainContainer.querySelector(' #statistics');
         let guessDistributionContainer = mainContainer.querySelector(' #guess-distribution');
-
         let statisticContainerPartFactory = (dataLabel,dataPercentage)=>{
             return `<div class="statistic-container">
                             <div class="statistic">${dataPercentage}</div>
                             <div class="label">${WG.setLabel()[dataLabel]}</div>
                     </div>`;
         }
-        let guessDistributionContainerPartFactory = (label,data)=>{
+        let guessDistributionContainerPartFactory = (label,data, percentage,isMax)=>{
+
             return `<div class="graph-container">
                       <div class="guess">${label}</div>
                       <div class="graph">
-                        <div class="graph-bar align-right" style="width: ${data}%;">
+                        <div class="graph-bar align-right ${isMax?'highlight':''}" style="width: ${percentage}%;">
                           <div class="num-guesses">${data}</div>
                         </div>
                       </div>
@@ -5840,8 +5833,14 @@ const WG ={
         Object.entries(statisticsData).forEach(([key,val])=>{
             statisticsContainer.innerHTML+=statisticContainerPartFactory(key,val)
         })
+
+        let objValues = Object.values(guesses);
+        let objValuesArray = [...objValues];
+        let objValueSum = objValuesArray.reduce((prev,curr)=>{return prev+curr},0);
+        let maxObjVal = objValuesArray.sort((a,b)=>{return b-a})[0];
+
         Object.entries(guesses).forEach(([key,val])=>{
-            guessDistributionContainer.innerHTML+=guessDistributionContainerPartFactory(key,val)
+            guessDistributionContainer.innerHTML+=guessDistributionContainerPartFactory(key, val,(val*100)/objValueSum, maxObjVal===val)
         })
     }
 }

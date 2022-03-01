@@ -57,7 +57,7 @@
         }
 
         #guess-distribution {
-            width: 80%;
+            width: 96%;
         }
 
         .graph-container {
@@ -101,6 +101,10 @@
             width:20px;
             text-align: right;
         }
+        .highlight {
+            background-color: #6AAA64 !important;
+            text-align: right;
+        }
 
         #statistics,
         #guess-distribution {
@@ -108,7 +112,7 @@
         }
     </style>
 </head>
-<body style="width: 400px; height: 560px; padding:0px; margin: 0px; position: relative">
+<body style="width: 400px; height: 530px; padding:0px; margin: 0px; position: relative">
     <h2 style="text-align: center; font-weight: bold;  width:100%; display: block; margin: 0 0 4px 0; height:30px">Hello Wordle (Guesser)!</h2>
     <div style="font-weight: bold">BEGIN WITH THE WORD:
         <input
@@ -127,8 +131,9 @@
                 <input type="number" value="1" size="1" style="width:35px" id="effectedGuessCount"> (words to be guessed)
         </span>
     </div>
-    <div id="statistics-item" style="width: 100%; height: 280px; border:0px; border-bottom:2px solid darkorange;border-top:2px solid darkorange;">
-    <div id="notes-item" style="width: 100%; height: 30px; border:0px; border-top:2px solid darkorange; background-color: lightgoldenrodyellow; ">...</div>
+
+    <div id="notes-item" style="width: 100%; height: 30px; border:0px; border-top:1px solid darkorange; background-color: lightyellow; ">...</div>
+    <div id="statistics-item" style="width: 100%; height: 260px; border:0px; border-bottom:1px solid darkorange;border-top:2px solid darkorange;">
         <div class="container">
             <h1 id="statisticsHeader" style="margin-top: 0px;"></h1>
             <div id="statistics">
@@ -137,7 +142,7 @@
             </div>
         </div>
     </div>
-    <div><input type="checkbox" id="gameModalAutoClose_switch">: Close Game-Modal</div>
+    <div><input type="checkbox" id="gameModalAutoClose_switch">: Keep closed the opening game-modal</div>
 <div style="width:100%; display: flex; bottom: 0px; position: absolute;  flex-direction:row; justify-content: space-between">
     <button class="outLink" data-link="https://www.flaticon.com/free-icons/question" title="Click to go to https://www.flaticon.com/free-icons/question" id="iconCopyrightButton">Icon Copyright</button>
     <button class="outLink" data-link="https://www.bundle.app/wordle-tr/" title="Click to go to https://www.bundle.app/wordle-tr/" id="wordleTurkishButton">Wordle Turkish</button>
