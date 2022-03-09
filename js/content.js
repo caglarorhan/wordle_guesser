@@ -7,6 +7,7 @@ window.addEventListener('load',async ()=>{
         // resetData
         // gameModalAutoClose
         // gameModalAutoClose_switch
+        // giveGameBoardStatus
         console.log(localStorage)
     })
     let sT = setTimeout(()=>{
@@ -15,6 +16,7 @@ window.addEventListener('load',async ()=>{
 
 })
 const WG ={
+    gameHomeUrl: 'https://www.bundle.app/wordle-tr',
     sendMessageToPopup:function (messageObject){chrome.runtime.sendMessage(messageObject)},
     getBoardState: function (){
         let wordList =[];
@@ -67,11 +69,12 @@ const WG ={
         localStorage.setItem('gameModalAutoClose_switch',gameModalAtoClose_switch);
     WG.printToConsole(payload)
     WG.sendMessageToPopup({type:'noteIt', payload: {message:"Local Storage data is cleared!"}})
+        window.location.replace(WG.gameHomeUrl);
     },
     giveStatistics:()=>{
         WG.sendMessageToPopup({type:"getStatistics", payload:{statistics:window.localStorage.getItem("statistics")}});
         // '{"currentStreak":100,"maxStreak":100,"guesses":{"1":100,"2":0,"3":0,"4":0,"5":0,"6":0,"fail":0},"winPercentage":100,"gamesPlayed":100,"gamesWon":100,"averageGuesses":1}'
-    }
+    },
 }
 
 

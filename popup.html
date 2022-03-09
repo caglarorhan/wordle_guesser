@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>WORDLE TURKISH GUESSER</title>
+    <title>GUESSER for WORDLE TURKISH</title>
     <style>
         h2{
             background-color: #6AAA64;
@@ -25,6 +25,18 @@
             text-transform: uppercase;
             text-align: center;
             margin-bottom: 10px;
+        }
+        h3 {
+            text-align: left;
+            padding-left: 10px;
+            background-color:lightgreen;
+            color:darkgreen;
+            padding-top:10px;
+            font-weight: bold;
+            width:100%;
+            display: block;
+            margin: 6px 0 4px 0;
+            height:30px
         }
 
         #statistics {
@@ -110,30 +122,50 @@
         #guess-distribution {
             padding-bottom: 10px;
         }
+        .stepNo{
+            width: 40px;
+            background-color: darkgreen;
+            border-radius: 50%;
+            color: white;
+            padding: 3px;
+        }
+        .statisticsItem{
+            width: 100%;
+            height: 265px;
+            border:0;
+            border-bottom:1px solid darkgrey;
+            border-top:1px solid darkgrey;
+            overflow-y: auto;
+            display: flex;
+            flex-flow: column wrap;
+            justify-content: flex-start;
+        }
+        .statisticsItem .wordButton{
+            flex: 0 0 50px;
+        }
     </style>
 </head>
-<body style="width: 400px; height: 530px; padding:0px; margin: 0px; position: relative">
-    <h2 style="text-align: center; font-weight: bold;  width:100%; display: block; margin: 0 0 4px 0; height:30px">Hello Wordle (Guesser)!</h2>
-    <div style="font-weight: bold">BEGIN WITH THE WORD:
+<body style="width: 400px; height: 600px; padding:0px; margin: 0px; position: relative">
+    <h2 style="text-align: center; font-weight: bold;  width:100%; display: block; margin: 0 0 4px 0; height:30px; padding-top:5px; ">GUESSER for WORDLE TURKISH</h2>
+    <div style="font-weight: bold">WORD:
         <input
                 id="guessedWord"
                 type="text"
-                style="font-size: 18px; text-align: center; color:red; font-weight: bold; border: 1px solid orangered; letter-spacing: 1px"
+                style="font-size: 18px; text-align: center; color:red; font-weight: bold; border: 1px solid darkgrey; letter-spacing: 1px"
                 size="5"
-                maxlength="5">
+                maxlength="5"> (Want to guess? Type here and hit enter)
     </div>
-    <h2 style="text-align: center; font-weight: bold; width:100%; display: block; margin: 6px 0 4px 0; height:30px">Choose The Guessing Method</h2>
-    <div style="display: flex; flex-direction: column;">
+    <h3> <span class="stepNo">#1</span> Choose The Guessing Method</h3>
+    <div style="display: flex; flex-direction: column;" id="methodOptions">
+        methods are loading...
+    </div>
+    <h3> <span class="stepNo">#2</span> Click The Auto Guess Checkbox</h3>
+    <div>
         <span style=""><input type="checkbox" id="isAutomaticGuessOn"> Auto-guess (starts guessing immediately)</span>
-        <span><input type="radio" name="guessType" class="methodOption" value="LFS" checked="checked"> Letter Frequency Sum (LFS)</span>
-        <span><input type="radio" name="guessType" class="methodOption" value="LFS_LU"> LFS & Letter Uniqueness (LU)</span>
-        <span>  <input type="radio" name="guessType" class="methodOption" value="CLU"> Consecutive Letter Uniqueness (CLU)
-                <input type="number" value="1" size="1" style="width:35px" id="effectedGuessCount"> (words to be guessed)
-        </span>
     </div>
 
-    <div id="notes-item" style="width: 100%; height: 30px; border:0px; border-top:1px solid darkorange; background-color: lightyellow; ">...</div>
-    <div id="statistics-item" style="width: 100%; height: 260px; border:0px; border-bottom:1px solid darkorange;border-top:2px solid darkorange;">
+    <div id="notes-item" style="width: 100%; height: 30px; border:0px; border-top:1px solid darkgrey; background-color: lightyellow; ">...</div>
+    <div id="statistics-item" class="statisticsItem">
         <div class="container">
             <h1 id="statisticsHeader" style="margin-top: 0px;"></h1>
             <div id="statistics">

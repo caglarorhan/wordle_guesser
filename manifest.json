@@ -1,14 +1,19 @@
 {
-  "name": "wordle_guesser",
-  "short_name": "Wordle Turkish Guesser",
-  "description": "Guessing the word extension for Wordle Turkish",
+  "name": "Guesser for Wordle Turkish",
+  "short_name": "Guesser for Wordle Turkish",
+  "description": "Chrome extension of Guesser for Wordle Turkish",
   "homepage_url": "https://www.linkedin.com/in/caglarorhan/",
-  "version": "2022.0.4",
-  "manifest_version": 2,
-  "browser_action": {
+  "version": "2022.0.5",
+  "manifest_version": 3,
+  "action": {
     "default_popup": "popup.html",
-    "default_title": "WORDLE TURKISH GUESSER",
-    "default_icon": "./guesser_16.png"
+    "default_title": "GUESSER for WORDLE TURKISH",
+    "default_icon": {
+      "16": "./guesser_16.png",
+      "32": "./guesser_32.png",
+      "48": "./guesser_48.png",
+      "128": "./guesser_128.png"
+    }
   },
   "icons": {
     "16": "./guesser_16.png",
@@ -24,9 +29,14 @@
       ]
     }
   ],
-  "web_accessible_resources": [
-    "./js/content.js"
-
-  ],
-  "permissions": ["activeTab", "storage"]
+  "permissions": ["activeTab", "storage"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+W",
+        "mac": "MacCtrl+Shift+W"
+      },
+      "description": "Opens popup.html"
+    }
+  }
 }

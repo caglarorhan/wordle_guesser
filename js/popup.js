@@ -5569,7 +5569,6 @@ const WG ={
             },
     },
     sendMessageToContent:function (messageObject){
-        //this.noteIt({message:"Sending message to the content..."});
         chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
             chrome.tabs.sendMessage(tabs[0].id, messageObject)
         });
@@ -5583,6 +5582,22 @@ const WG ={
         setTimeout(()=>{
             document.querySelector("#notes-item").innerHTML='';
         },2000)
+    },
+    showRemainedWords:(wordList)=>{
+        let statisticsItem = document.getElementById('statistics-item');
+        let guessedWord = document.getElementById('guessedWord');
+        wordList = WG.reOrderAlphabetically(wordList);
+        statisticsItem.innerHTML = WG.createWordsMapByLetterPositionsValues(wordList).map(wordObject=>`<button title="Click to choose the word ${wordObject.word}" class="wordButton">${wordObject.word}</button>`).join('').toString();
+        statisticsItem.querySelectorAll('button').forEach(btn=>{
+            btn.addEventListener('click',(event)=>{
+                guessedWord.value=event.target.innerText;
+                WG.beginToGuess();
+                statisticsItem.innerHTML='';
+            })
+        })
+    },
+    reOrderAlphabetically:(wordList)=>{
+        return wordList.sort((a,b)=>{return (a.word < b.word)});
     },
     createLetterPositionMap: function (wordList){
         let letterPositionMap={};
@@ -5619,6 +5634,48 @@ const WG ={
         })
         return wordsMap.sort((a,b)=>{return b.value-a.value});
     },
+    guesserMethods: [
+            {
+                label:"LFS",
+                info:"Letter Frequency Sum (LFS)",
+                method:(queries,wordList)=>{
+                    if(queries){wordList = WG.queryFilterStepper(queries,wordList);}
+                    return WG.createWordsMapByLetterPositionsValues(wordList)[0].word;
+                }
+            },
+                        {
+                label:"LFS_LU",
+                info:"LFS & Letter Uniqueness (LU)",
+                method:(queries,wordList)=>{
+                    if(queries){wordList = WG.queryFilterStepper(queries,wordList);}
+                    return WG.wordsWithUniqueLetters(WG.createWordsMapByLetterPositionsValues(wordList))[0].word;
+                }
+            },
+                        {
+                label:"CLU",
+                info:"Consecutive Letter Uniqueness (CLU)",
+                method:(queries,wordList)=>{
+                    if(queries){
+                        let boardWordCount = queries.length/WG.wordLength;
+                        let consecutiveWords = WG.consecutiveWordsThatHasNonRepeatingLetters(WG.lowerCaseLetterWordList);
+                        consecutiveWords = consecutiveWords.filter(wordObject=>wordList.includes(wordObject.word))
+                        if(boardWordCount<consecutiveWords.length){
+                            return consecutiveWords[0].word;
+                        }else{
+                            if(queries){wordList = WG.queryFilterStepper(queries,wordList);}
+                            wordList= WG.createWordsMapByLetterPositionsValues(wordList);
+                            if(!wordList.length>0){
+                                WG.noteIt({message:"Method possibilities finished. Exitting..."});
+                                return false;
+                            }
+                            return wordList[0].word;
+                        }
+                    }else{
+                        return WG.consecutiveWordsThatHasNonRepeatingLetters(WG.lowerCaseLetterWordList)[0].word;
+                    }
+                }
+            },
+            ],
     queryBuilder:function (boardState){
     let queries = [];
     let evaluations = boardState.evalList;
@@ -5691,45 +5748,33 @@ const WG ={
         WG.handleAutoGuessCheck(wordList,queries);
     },
     handleAutoGuessCheck: function(wordListG, queries){
+        if(queries){
+            let guessCount = +queries.length / WG.wordLength;
+            //alert(`Query count: ${queries.length}, wordLength: ${WG.wordLength}, guessCount: ${queries.length / WG.wordLength}`);
+            if(queries.slice(-5).every(evaluate=>evaluate.status==="correct")){
+                alert(`The Guesser guessed the word at ${guessCount}. attempt!`);
+                WG.giveStatistics();
+                return;
+            }else if(guessCount === WG.boardHeight){
+                alert(`Guesser couldn't guess the word at ${guessCount}. attempts.`);
+                WG.giveStatistics();
+                return;
+            }
+        }
         let wordList = !wordListG.length?WG.lowerCaseLetterWordList:wordListG;
         let guessedWord = document.getElementById('guessedWord');
         let methodOption = document.querySelector('.methodOption:checked');
         let selectedGuessedWord = '';
         if(WG.isAutoGuessOn()){
             guessedWord.setAttribute("readonly","readonly")
-            switch(methodOption.value){
-                case "LFS":
-                    if(queries){wordList = WG.queryFilterStepper(queries,wordList);}
-                    selectedGuessedWord = WG.createWordsMapByLetterPositionsValues(wordList)[0].word;
-                    break;
-                case "LFS_LU":
-                    if(queries){wordList = WG.queryFilterStepper(queries,wordList);}
-                    selectedGuessedWord = WG.wordsWithUniqueLetters(WG.createWordsMapByLetterPositionsValues(wordList))[0].word;
-                    break;
-                case "CLU":
-                    let effectedGuessCount = document.getElementById('effectedGuessCount');
-                    if(queries){
-                        let boardWordCount = queries.length/WG.wordLength;
-                        let consecutiveWords = WG.consecutiveWordsThatHasNonRepeatingLetters(WG.lowerCaseLetterWordList);
-                        consecutiveWords = consecutiveWords.filter(wordObject=>wordList.includes(wordObject.word))
-                        if(boardWordCount<effectedGuessCount.value && boardWordCount<consecutiveWords.length){
-                            selectedGuessedWord = consecutiveWords[0].word;
-                        }else{
-                            if(queries){wordList = WG.queryFilterStepper(queries,wordList);}
-                            selectedGuessedWord = WG.createWordsMapByLetterPositionsValues(wordList)[0].word;
-                        }
-                    }else{
-                        selectedGuessedWord = WG.consecutiveWordsThatHasNonRepeatingLetters(WG.lowerCaseLetterWordList)[0].word;
-                    }
-                    break;
-                default:
-                    break;
-            }
+            selectedGuessedWord = WG.guesserMethods.filter(method=>method.label===methodOption.value)[0].method(queries, wordList);
             guessedWord.value = selectedGuessedWord;
             WG.sendMessageToContent({type:'printToConsole',payload:{message:"Selected word on popup is:"+selectedGuessedWord}});
         }else{
             guessedWord.removeAttribute("readonly");
             guessedWord.value = '';
+            WG.showRemainedWords(wordList);
+
         }
         WG.beginToGuess();
     },
@@ -5753,7 +5798,6 @@ const WG ={
         return document.getElementById('isAutomaticGuessOn').checked;
     },
     consecutiveWordsThatHasNonRepeatingLetters: (wordList)=>{
-        console.log(`consecuti... satir 262 ${wordList.length}`)
         let wordsMapByLetterPositionsValues = WG.createWordsMapByLetterPositionsValues(wordList);
         let uniqueLetterList =[];
         let uWords=[]
@@ -5779,7 +5823,6 @@ const WG ={
     },
     wordsWithUniqueLetters:(wordObjectsList)=>{
         return wordObjectsList.filter(wordObject=>{
-
             let wordsLettersSet = new Set(wordObject.word.split(''));
             return wordObject.word.length===[...wordsLettersSet].length;
         })
@@ -5803,6 +5846,7 @@ const WG ={
         WG.sendMessageToContent({type:"giveStatistics"})
     },
     getStatistics:(payload)=>{
+        if(!payload.statistics) return;
         document.getElementById("statisticsHeader").innerHTML=WG.setLabel().statistics;
         let {guesses, ...statisticsData}= JSON.parse(payload.statistics);
         let mainContainer = document.querySelector('#statistics-item .container');
@@ -5830,6 +5874,7 @@ const WG ={
             return;
         }
         //
+        statisticsContainer.innerHTML="";
         Object.entries(statisticsData).forEach(([key,val])=>{
             statisticsContainer.innerHTML+=statisticContainerPartFactory(key,val)
         })
@@ -5839,15 +5884,24 @@ const WG ={
         let objValueSum = objValuesArray.reduce((prev,curr)=>{return prev+curr},0);
         let maxObjVal = objValuesArray.sort((a,b)=>{return b-a})[0];
 
+        guessDistributionContainer.innerHTML="";
         Object.entries(guesses).forEach(([key,val])=>{
             guessDistributionContainer.innerHTML+=guessDistributionContainerPartFactory(key, val,(val*100)/objValueSum, maxObjVal===val)
+        })
+    },
+    setMethodOptions:()=>{
+        let methodOptionsContainer = document.getElementById('methodOptions');
+        methodOptionsContainer.innerHTML="";
+        WG.guesserMethods.forEach(methodObject=>{
+            methodOptionsContainer.innerHTML+=`<span><input type="radio" name="guessType" class="methodOption" value="${methodObject.label}" checked="checked"> ${methodObject.info}</span>`;
         })
     }
 }
 
 window.addEventListener('load',()=>{
+    WG.setMethodOptions();
     WG.sendMessageToContent({type:"gameModalAutoClose_status",payload:null});
-    WG.sendMessageToContent({type:"giveStatistics"})
+    WG.giveStatistics();
     let guessedWord = document.getElementById('guessedWord');
     guessedWord.setAttribute('maxlength', WG.wordLength);
     guessedWord.addEventListener('keyup',(event)=>{
@@ -5856,32 +5910,19 @@ window.addEventListener('load',()=>{
             guessedWord.select();
         }
     })
-
     document.querySelector('#isAutomaticGuessOn').addEventListener('click',WG.handleAutoGuessCheck)
     document.querySelector('#localStorageResetButton').innerText = WG.setLabel().resetAllData;
     document.querySelector('#localStorageResetButton').addEventListener('click',()=>{
         let dataResetConfirmed = confirm('Do you wanna reset all Wordle Turkish saved game data?');
         if(!dataResetConfirmed) return;
         WG.sendMessageToContent({type:'resetData',payload:{message:'Request of reset localStorage data.'}});
-        WG.noteIt({message:"Data reset request sent!"})
+        WG.noteIt({message:"Data reset request sent!"});
+        document.querySelector('#isAutomaticGuessOn').checked=false;
     })
     document.getElementById('gameModalAutoClose_switch').addEventListener('click',(event)=>{
         WG.sendMessageToContent({type:"gameModalAutoClose_switch",payload:{gameModalAutoClose:event.target.checked}})
     })
-    let guessWordCount = document.getElementById('effectedGuessCount');
-    guessWordCount.setAttribute('max',WG.boardHeight.toString());
-    guessWordCount.setAttribute('min',"1");
-    guessWordCount.addEventListener('keyup',(event)=>{
-        let effectedGuessCount = event.target;
-        if(effectedGuessCount.value>WG.boardHeight){
-            effectedGuessCount.value=WG.boardHeight;
-        }
-        if(effectedGuessCount.value<0){
-            effectedGuessCount.value=0;
-        }
-    })
     WG.setOutLinks();
-    document.querySelectorAll('.methodOption').forEach(methodOption=>methodOption.addEventListener('click',WG.automaticGuessCheckToggle));
 
     //redirect onload
     chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
