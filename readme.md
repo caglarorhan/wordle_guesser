@@ -72,4 +72,4 @@ If you find this project helpful or enjoyable, you can support its development b
 [<img src="./img/bmc-icon.svg" alt="Donating through BuyMeACoffee" width="20" height="20" />](https://www.buymeacoffee.com/caglarorhan "Buy Me A Coffee")
 
 ## Feedback
-For any questions, issues, or feedback, please [open an issue](../../issues) on GitHub. Your input is valuable and helps improve the game for everyone!
+For any questions, issues, or feedback, please [open an issue](../../issues) on GitHub. Your input is valuable and helps improve the attachment for everyone!
