@@ -1,4 +1,4 @@
-**What is Wordle Guesser?**
+**What is [Wordle Guesser](https://chromewebstore.google.com/detail/guesser-for-wordle-turkis/aoaghflbehgmllepccofeghnafnfmkab?hl=en)?**
 
 It is a browser attachment (extension) that trying to solve wordle game's Turkish version by guessing the word.
 Wordle Game Turkish version is authored by [Fatih Kadir Akın](https://github.com/f)  and it is available on [Bundle.app](https://www.bundle.app/wordle-tr/ )
@@ -62,3 +62,14 @@ coming soon...
 - Messaging structure between popup and content side
 
 
+
+**Support**
+
+If you find this project helpful or enjoyable, you can support its development by [buying me a coffee](https://www.buymeacoffee.com/caglarorhan) ☕️ or donating through [PayPal](https://paypal.me/caglarorhan?country.x=US&locale.x=en_US) .
+
+[<img src="./img/paypal-mark-color.svg" alt="Donating through PayPal" width="20" height="20" />](https://paypal.me/caglarorhan?country.x=US&locale.x=en_US "PayPal")
+
+[<img src="./img/bmc-icon.svg" alt="Donating through BuyMeACoffee" width="20" height="20" />](https://www.buymeacoffee.com/caglarorhan "Buy Me A Coffee")
+
+## Feedback
+For any questions, issues, or feedback, please [open an issue](../../issues) on GitHub. Your input is valuable and helps improve the game for everyone!
