@@ -1,7 +1,7 @@
 **What is [Wordle Guesser](https://chromewebstore.google.com/detail/guesser-for-wordle-turkis/aoaghflbehgmllepccofeghnafnfmkab?hl=en)?**
 
 It is a browser attachment (extension) that trying to solve wordle game's Turkish version by guessing the word.
-Wordle Game Turkish version is authored by [Fatih Kadir Akın](https://github.com/f)  and it is available on [Bundle.app](https://www.bundle.app/wordle-tr/ )
+Wordle Game Turkish version is authored by [Fatih Kadir Akın](https://github.com/f)  and it is available on [Bundle.app](https://wordleturkce.bundle.app/)
 
 **How it works?**
 

@@ -5535,8 +5535,8 @@ const WG ={
         "zürra",
         "züyuf"
     ],
-    gameHomeUrl: 'https://www.bundle.app/wordle-tr',
-    targetLetterSource: 'https://www.bundle.app/wordle-tr/static/main.6.js',
+    gameHomeUrl: 'https://wordleturkce.bundle.app/',
+    targetLetterSource: 'https://wordleturkce.bundle.app/static/main.6.js',
     labelLanguage:"EN",
     labelsLanguageConversion: {
         TR:{
@@ -5569,7 +5569,6 @@ const WG ={
             },
     },
     sendMessageToContent:function (messageObject){
-
         chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
             chrome.tabs.sendMessage(tabs[0].id, messageObject);
         });

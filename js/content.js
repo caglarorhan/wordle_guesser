@@ -16,7 +16,7 @@ window.addEventListener('load',async ()=>{
 
 })
 const WG ={
-    gameHomeUrl: 'https://www.bundle.app/wordle-tr',
+    gameHomeUrl: 'https://wordleturkce.bundle.app',
     sendMessageToPopup:function (messageObject){chrome.runtime.sendMessage(messageObject)},
     getBoardState: function (){
         let wordList =[];

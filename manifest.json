@@ -3,7 +3,7 @@
   "short_name": "Guesser for Wordle Turkish",
   "description": "Chrome extension of Guesser for Wordle Turkish",
   "homepage_url": "https://www.linkedin.com/in/caglarorhan/",
-  "version": "2023.0.1",
+  "version": "2025.0.1",
   "manifest_version": 3,
   "action": {
     "default_popup": "popup.html",
